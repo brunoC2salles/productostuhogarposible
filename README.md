@@ -70,3 +70,10 @@ Motivo: o esquema por query-string tinha 2 problemas descobertos com evidência 
 Com o path espelhado, `<base>` aponta pro próprio prefixo do proxy (não pro domínio real), então qualquer referência relativa que escape da reescrita ainda resolve corretamente.
 
 **Limitação que ainda não descartei:** se Hipoges carregar algum recurso (fonte, chunk) de um subdomínio diferente de `realestate.hipoges.com` (ex: um CDN separado), esse recurso específico não seria proxied por este esquema ainda — só saberemos se isso é o caso com um novo teste de DevTools.
+
+## Update 3 — respeitar a <base> real do site + header de diagnóstico
+Os 404s de fontes/i18n/config/csrf-token vinham de reconstruirmos a URL real errada — resolvíamos caminhos relativos contra a URL da página, mas apps Angular (que é o que Solvia/Hipoges parecem ser) definem sua própria `<base href="...">`, que dita como isso deveria ser feito. Agora leio essa tag do HTML real antes de reescrever qualquer coisa.
+
+Toda resposta do proxy agora inclui os headers `X-Debug-Target-Url` (URL exata que buscamos no servidor real) e `X-Debug-Upstream-Status` (o status que esse servidor respondeu). Se algo ainda 404, dá pra ver na aba Network → clicar no request → Headers → Response Headers, e eu já sei exatamente qual URL errada estamos montando, sem precisar de mais uma rodada de suposição.
+
+**Resíduo não investigado:** um erro "productos-bancarios:1 404" aparece nos prints, na página raiz (não dentro do iframe). Não achei nenhuma referência no código que explique isso — pode ser cosmético (erro de script sem stack trace, que o Chrome atribui à página por padrão). Não é prioridade a menos que volte a aparecer de forma consistente e bloqueante.
