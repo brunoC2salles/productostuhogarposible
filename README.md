@@ -32,3 +32,14 @@ Sem capacidade de screenshot/browser neste ambiente. Validei com `npm run build`
 npm install
 npm run build
 ```
+
+## Update — causa raiz real dos scripts/fontes quebrados (com evidência de DevTools)
+Com os prints reais de Console/Network, achei 2 bugs concretos (não mais suposição):
+1. Só reescrevia `href`/`action`, não `src` — os JS de Solvia são ES modules, que exigem CORS por padrão do navegador mesmo sem X-Frame-Options envolvido. Sem isso, o app JS deles nunca inicializava.
+2. Os links que eu gerava eram relativos (`/api/proxy?url=...`), mas como a página tem `<base href>` apontando pro domínio real, isso resolvia errado (voltava pro domínio deles, não pro nosso). Corrigido para URLs absolutas.
+
+Também passei a reescrever `url()` dentro de CSS (fontes via `@font-face` também precisam ser same-origin).
+
+**Resíduo observado nos prints, sem solução no nosso lado:** o Cookiebot (banner de cookies) de Solvia/Hipoges recusa renderizar porque o domínio `productostuhogarposible.vercel.app` não está autorizado no projeto deles do Cookiebot — isso é configuração do lado deles, não corrigível via proxy. Provavelmente inofensivo, mas se algo ficar condicionado ao consentimento de cookies, pode ser a causa.
+
+Preciso do mesmo teste de DevTools (Console + Network) depois deste deploy para confirmar se os scripts agora carregam.
