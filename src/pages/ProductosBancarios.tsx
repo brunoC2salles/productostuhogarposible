@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import Header from '../components/Header';
-import IframePanel from '../components/IframePanel';
+import logo from '../assets/logo.png';
+import ExternalSitePanel from '../components/ExternalSitePanel';
 import Disclaimer from '../components/Disclaimer';
 
 type Tab = 'solvia' | 'hipoges';
@@ -10,10 +10,11 @@ export default function ProductosBancarios() {
 
   return (
     <div className="thp-page thp-page-fixed">
-      <Header />
-
       <div className="thp-subheader">
-        <h1>Productos Bancarios</h1>
+        <div className="thp-subheader-title">
+          <img src={logo} alt="Tu Hogar Posible" className="thp-subheader-logo" />
+          <h1>Productos Bancarios</h1>
+        </div>
         <div className="thp-tabs" role="tablist" aria-label="Colaboraciones bancarias">
           <button
             role="tab"
@@ -36,9 +37,17 @@ export default function ProductosBancarios() {
 
       <main className="thp-iframe-main">
         {tab === 'solvia' ? (
-          <IframePanel src="https://www.solvia.es/es/comprar-casa" title="Colaboración Solvia" />
+          <ExternalSitePanel
+            src="https://www.solvia.es/es/comprar-casa"
+            title="Colaboración Solvia"
+            description="Consulta el catálogo de inmuebles de Solvia. Se abre en una pestaña nueva."
+          />
         ) : (
-          <IframePanel src="https://realestate.hipoges.com/es" title="Colaboración Hipoges" />
+          <ExternalSitePanel
+            src="https://realestate.hipoges.com/es"
+            title="Colaboración Hipoges"
+            description="Consulta el catálogo de inmuebles de Hipoges. Se abre en una pestaña nueva."
+          />
         )}
       </main>
 

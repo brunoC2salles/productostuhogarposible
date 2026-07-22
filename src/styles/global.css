@@ -37,27 +37,6 @@ button {
   cursor: pointer;
 }
 
-/* Header */
-.thp-header {
-  height: var(--thp-header-h);
-  display: flex;
-  align-items: center;
-  padding: 0 32px;
-  border-bottom: 1px solid var(--thp-border);
-  background: var(--thp-bg);
-  flex-shrink: 0;
-}
-
-.thp-header img {
-  height: 40px;
-  width: auto;
-}
-
-.thp-header a {
-  display: flex;
-  align-items: center;
-}
-
 /* Pill buttons */
 .thp-btn {
   display: inline-flex;
@@ -119,10 +98,18 @@ button {
   overflow: hidden;
 }
 
-/* Hero */
+.thp-page-single {
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Hero (home - only section on the page) */
+.thp-hero-full {
+  height: 100vh;
+}
+
 .thp-hero {
-  flex: 1;
-  min-height: 560px;
+  position: relative;
   background-size: cover;
   background-position: center;
   display: flex;
@@ -131,8 +118,16 @@ button {
   padding: 48px 24px;
 }
 
+.thp-hero-logo {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  height: 40px;
+  width: auto;
+}
+
 .thp-hero-content {
-  max-width: 640px;
+  max-width: 680px;
   text-align: center;
   color: #FFFFFF;
 }
@@ -148,35 +143,37 @@ button {
 .thp-hero-content p {
   font-size: 18px;
   line-height: 1.5;
-  margin: 0 0 32px;
+  margin: 0 0 40px;
   color: rgba(255,255,255,0.9);
 }
 
-.thp-hero-cta {
-  font-size: 17px;
-  padding: 18px 40px;
-}
-
-/* CTA section (home) */
-.thp-cta-section {
+.thp-hero-ctas {
   display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
+  gap: 16px;
   justify-content: center;
-  padding: 56px 24px;
+  flex-wrap: wrap;
 }
 
-.thp-cta-card {
-  flex: 1 1 260px;
-  max-width: 360px;
-  padding: 24px 32px;
-  font-size: 18px;
+.thp-hero-cta {
+  font-size: 16px;
+  padding: 18px 36px;
+}
+
+.thp-btn-outline-white {
+  background: transparent;
+  color: #FFFFFF;
+  border: 2px solid #FFFFFF;
+}
+
+.thp-btn-outline-white:hover {
+  background: #FFFFFF;
+  color: var(--thp-text);
 }
 
 /* Subheader (product pages) */
 .thp-subheader {
   flex-shrink: 0;
-  padding: 24px 32px;
+  padding: 20px 32px;
   border-bottom: 1px solid var(--thp-border);
   display: flex;
   align-items: center;
@@ -185,8 +182,19 @@ button {
   gap: 16px;
 }
 
+.thp-subheader-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.thp-subheader-logo {
+  height: 36px;
+  width: auto;
+}
+
 .thp-subheader h1 {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
   margin: 0;
   letter-spacing: -0.01em;
@@ -208,63 +216,58 @@ button {
   color: #FFFFFF;
 }
 
-/* Iframe area */
+/* External site panel (replaces broken iframe) */
 .thp-iframe-main {
   flex: 1;
   min-height: 0;
   display: flex;
 }
 
-.thp-iframe-wrap {
+.thp-external-panel {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-
-.thp-iframe-toolbar {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 24px;
-  background: #F7F8FA;
-  border-bottom: 1px solid var(--thp-border);
-}
-
-.thp-iframe-source {
-  font-size: 13px;
-  color: var(--thp-text-muted);
-  font-weight: 600;
-}
-
-.thp-iframe-openbtn {
-  padding: 8px 18px;
-  font-size: 13px;
-}
-
-.thp-iframe-body {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-}
-
-.thp-iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-  display: block;
-}
-
-.thp-iframe-loading {
-  position: absolute;
-  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--thp-text-muted);
-  font-size: 14px;
   background: #FAFAFA;
+  padding: 24px;
+}
+
+.thp-external-card {
+  max-width: 480px;
+  text-align: center;
+  background: #FFFFFF;
+  border: 1px solid var(--thp-border);
+  border-radius: 16px;
+  padding: 48px 40px;
+}
+
+.thp-external-eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--thp-blue);
+  margin-bottom: 12px;
+}
+
+.thp-external-card h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+
+.thp-external-card p {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--thp-text-muted);
+  margin: 0 0 28px;
+}
+
+.thp-external-cta {
+  padding: 14px 32px;
+  font-size: 15px;
 }
 
 /* Disclaimer */
@@ -292,11 +295,13 @@ button {
 }
 
 @media (max-width: 640px) {
-  .thp-header {
-    padding: 0 16px;
-  }
   .thp-subheader {
     padding: 16px;
+  }
+  .thp-hero-logo {
+    top: 20px;
+    left: 20px;
+    height: 32px;
   }
   .thp-disclaimer {
     flex-direction: column;
