@@ -1,13 +1,13 @@
 import { useState } from 'react';
 
 interface IframePanelProps {
-  src: string;
+  src: string; // URL real do site (usada no link "abrir em nova aba")
+  proxySrc: string; // caminho espelhado do nosso proxy (usado no iframe)
   title: string;
 }
 
-export default function IframePanel({ src, title }: IframePanelProps) {
+export default function IframePanel({ src, proxySrc, title }: IframePanelProps) {
   const [loaded, setLoaded] = useState(false);
-  const proxiedSrc = `/api/proxy?url=${encodeURIComponent(src)}`;
 
   return (
     <div className="thp-iframe-wrap">
@@ -29,8 +29,8 @@ export default function IframePanel({ src, title }: IframePanelProps) {
           </div>
         )}
         <iframe
-          key={proxiedSrc}
-          src={proxiedSrc}
+          key={proxySrc}
+          src={proxySrc}
           title={title}
           onLoad={() => setLoaded(true)}
           className="thp-iframe"

@@ -37,9 +37,17 @@ export default function ProductosBancarios() {
 
       <main className="thp-iframe-main">
         {tab === 'solvia' ? (
-          <IframePanel src="https://www.solvia.es/es/comprar-casa" title="Colaboración Solvia" />
+          <IframePanel
+            src="https://www.solvia.es/es/comprar-casa"
+            proxySrc="/api/proxy-solvia/es/comprar-casa"
+            title="Colaboración Solvia"
+          />
         ) : (
-          <IframePanel src="https://realestate.hipoges.com/es" title="Colaboración Hipoges" />
+          <IframePanel
+            src="https://realestate.hipoges.com/es"
+            proxySrc="/api/proxy-hipoges/es"
+            title="Colaboración Hipoges"
+          />
         )}
       </main>
 
