@@ -7,6 +7,7 @@ interface IframePanelProps {
 
 export default function IframePanel({ src, title }: IframePanelProps) {
   const [loaded, setLoaded] = useState(false);
+  const proxiedSrc = `/api/proxy?url=${encodeURIComponent(src)}`;
 
   return (
     <div className="thp-iframe-wrap">
@@ -16,7 +17,7 @@ export default function IframePanel({ src, title }: IframePanelProps) {
           href={src}
           target="_blank"
           rel="noopener noreferrer"
-          className="thp-btn thp-btn-secondary thp-iframe-openbtn"
+          className="thp-iframe-openlink"
         >
           Abrir en pestaña nueva ↗
         </a>
@@ -28,8 +29,8 @@ export default function IframePanel({ src, title }: IframePanelProps) {
           </div>
         )}
         <iframe
-          key={src}
-          src={src}
+          key={proxiedSrc}
+          src={proxiedSrc}
           title={title}
           onLoad={() => setLoaded(true)}
           className="thp-iframe"

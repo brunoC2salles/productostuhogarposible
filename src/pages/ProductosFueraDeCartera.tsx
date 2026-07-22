@@ -1,5 +1,5 @@
 import logo from '../assets/logo.png';
-import ExternalSitePanel from '../components/ExternalSitePanel';
+import IframePanel from '../components/IframePanel';
 import Disclaimer from '../components/Disclaimer';
 
 export default function ProductosFueraDeCartera() {
@@ -13,11 +13,7 @@ export default function ProductosFueraDeCartera() {
       </div>
 
       <main className="thp-iframe-main">
-        <ExternalSitePanel
-          src="https://www.idealista.com/"
-          title="Idealista"
-          description="Consulta el catálogo de inmuebles de Idealista. Se abre en una pestaña nueva."
-        />
+        <IframePanel src="https://www.idealista.com/" title="Idealista" />
       </main>
 
       <Disclaimer />
