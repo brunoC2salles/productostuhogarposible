@@ -12,7 +12,7 @@ const ALLOWED_HOSTS = [
   'idealista.com',
 ];
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   const target = req.query.url;
 
   if (!target) {
@@ -80,4 +80,4 @@ module.exports = async (req, res) => {
       </body></html>`
     );
   }
-};
+}

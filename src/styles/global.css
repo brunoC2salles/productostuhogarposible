@@ -103,6 +103,7 @@ button {
   height: 100vh;
   height: 100dvh;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Hero (home - only section on the page) */
@@ -131,19 +132,20 @@ button {
 }
 
 .thp-hero-content {
-  max-width: 680px;
+  max-width: 760px;
+  width: 100%;
   text-align: center;
   color: #FFFFFF;
 }
 
 .thp-hero-content h1 {
-  font-size: clamp(12px, 3.4vw, 52px);
+  font-size: clamp(18px, 5.2vw, 48px);
   font-weight: 700;
   line-height: 1.15;
-  margin: 0 0 16px;
+  margin: 0 auto 16px;
   letter-spacing: -0.02em;
-  text-transform: uppercase;
   white-space: nowrap;
+  text-align: center;
 }
 
 .thp-hero-content p {

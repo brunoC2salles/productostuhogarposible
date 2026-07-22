@@ -12,7 +12,7 @@ export default function Home() {
         <img src={logo} alt="Tu Hogar Posible" className="thp-hero-logo" />
 
         <div className="thp-hero-content">
-          <h1>Encuentra tu próximo hogar posible</h1>
+          <h1>Encuentra Tu Hogar Posible</h1>
           <p>Productos inmobiliarios seleccionados, en colaboración con las principales carteras del mercado.</p>
 
           <div className="thp-hero-ctas">
