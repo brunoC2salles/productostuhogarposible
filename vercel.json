@@ -1,5 +1,7 @@
 {
   "rewrites": [
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    { "source": "/api/proxy-solvia/:path*", "destination": "/api/proxy-solvia?path=:path*" },
+    { "source": "/api/proxy-hipoges/:path*", "destination": "/api/proxy-hipoges?path=:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

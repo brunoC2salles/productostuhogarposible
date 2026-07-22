@@ -77,3 +77,10 @@ Os 404s de fontes/i18n/config/csrf-token vinham de reconstruirmos a URL real err
 Toda resposta do proxy agora inclui os headers `X-Debug-Target-Url` (URL exata que buscamos no servidor real) e `X-Debug-Upstream-Status` (o status que esse servidor respondeu). Se algo ainda 404, dá pra ver na aba Network → clicar no request → Headers → Response Headers, e eu já sei exatamente qual URL errada estamos montando, sem precisar de mais uma rodada de suposição.
 
 **Resíduo não investigado:** um erro "productos-bancarios:1 404" aparece nos prints, na página raiz (não dentro do iframe). Não achei nenhuma referência no código que explique isso — pode ser cosmético (erro de script sem stack trace, que o Chrome atribui à página por padrão). Não é prioridade a menos que volte a aparecer de forma consistente e bloqueante.
+
+## Update 4 — causa raiz DEFINITIVA confirmada: roteamento do Vercel, não lógica do proxy
+Com o header de diagnóstico, veio a prova definitiva: o corpo da resposta 404 era `{"error":{"code":"404","message":"The page could not be found"}}` — esse é o formato de erro do PRÓPRIO VERCEL (confirmado pelo header `Server: Vercel`), não algo que nosso código gera. Isso provou que essas requisições nunca chegavam na nossa função — o roteamento do Vercel rejeitava antes.
+
+Padrão identificado: caminhos com 1 segmento (`/api/proxy-hipoges/es`) funcionavam; caminhos com múltiplos níveis (`/api/proxy-hipoges/api/security/csrf-token`) não. A rota dinâmica por nome de arquivo entre colchetes (`api/proxy-hipoges/[...path].js`) não estava sendo confiável para múltiplos segmentos aninhados neste tipo de projeto (Vite/zero-config, não Next.js).
+
+**Correção:** troquei para arquivos de função simples (`api/proxy-solvia.js`, `api/proxy-hipoges.js`, sem colchetes) + `rewrites` explícitos no `vercel.json`, que é o mecanismo de roteamento mais robusto e documentado do Vercel para este tipo de captura de caminho. Do lado do navegador nada muda (a URL continua parecendo um caminho normal, não query string) — o rewrite acontece só no servidor.
