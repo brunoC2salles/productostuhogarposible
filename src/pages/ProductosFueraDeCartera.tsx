@@ -1,5 +1,5 @@
 import logo from '../assets/logo.png';
-import IframePanel from '../components/IframePanel';
+import ExternalSitePanel from '../components/ExternalSitePanel';
 import Disclaimer from '../components/Disclaimer';
 
 export default function ProductosFueraDeCartera() {
@@ -13,7 +13,11 @@ export default function ProductosFueraDeCartera() {
       </div>
 
       <main className="thp-iframe-main">
-        <IframePanel src="https://www.idealista.com/" title="Idealista" />
+        <ExternalSitePanel
+          src="https://www.idealista.com/"
+          title="Idealista"
+          description="Idealista utiliza verificación de dispositivo (anti-bot) que impide mostrarlo embebido de forma fiable. Se abre en una pestaña nueva."
+        />
       </main>
 
       <Disclaimer />

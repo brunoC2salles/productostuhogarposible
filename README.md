@@ -1,38 +1,34 @@
 # Tu Hogar Posible - Landing de Productos (productostuhogarposible.com)
 
 ## Stack
-React + TypeScript + Vite + react-router-dom + 1 Vercel Serverless Function (`api/proxy.js`). Deploy no Vercel.
+React + TypeScript + Vite + react-router-dom + Vercel Serverless Function (`api/proxy.js`) + `vercel.json`.
 
 ## Rotas
-- `/` — Home: apenas a hero (imagem de fundo, logo no canto, headline em 1 linha maiúscula, e os 2 CTAs "Productos Bancarios" / "Productos Fuera de Cartera"). Sem header.
-- `/productos-bancarios` — sem header; logo ao lado do título; abas "Colaboración Solvia" / "Colaboración Hipoges"; iframe real via proxy
-- `/productos-fuera-de-cartera` — sem header; logo ao lado do título; iframe real via proxy (Idealista)
+- `/` — Home: hero em tela cheia, headline "Encuentra Tu Hogar Posible" (1 linha, centralizada), 2 CTAs
+- `/productos-bancarios` — abas Solvia / Hipoges, iframe navegável via proxy
+- `/productos-fuera-de-cartera` — Idealista: card "Abrir en pestaña nueva" (não usa proxy — ver motivo abaixo)
 
-## Como o iframe passou a funcionar (`api/proxy.js`)
-Solvia, Hipoges e Idealista bloqueiam ser exibidos em iframe via cabeçalhos HTTP (`X-Frame-Options` / CSP `frame-ancestors`) — isso é enviado pelo servidor deles, não é algo visível/editável no HTML.
+## Correção crítica: `vercel.json`
+Faltava esse arquivo. Sem ele, dar F5 em qualquer rota que não seja `/` retornava 404 (o Vercel tentava achar um arquivo físico `productos-bancarios`, que não existe — é uma rota do React Router, só existe em memória no navegador). O rewrite manda tudo que não é `/api/*` para `index.html`, deixando o React Router assumir o roteamento.
 
-A solução: `api/proxy.js` roda no nosso servidor (Vercel), busca o HTML da página de destino, e devolve essa mesma página **sem repassar** os cabeçalhos de bloqueio. O iframe no navegador aponta para `/api/proxy?url=...` (nosso próprio domínio) — como quem está bloqueando é o site original e não nós, o navegador permite exibir a resposta do nosso proxy dentro do iframe. Imagens, CSS e JS que a página carrega com caminho relativo continuam vindo direto do domínio original (usei uma tag `<base>` para isso), então a maior parte do visual deve carregar normalmente.
+## Proxy (`api/proxy.js`) — versão aprofundada, só Solvia e Hipoges
+A primeira versão só entregava a página inicial. Buscas e navegação continuavam quebradas porque sites modernos fazem isso via JavaScript (`fetch`/`XMLHttpRequest`), não por link HTML simples — e essas chamadas, feitas a partir do nosso domínio, eram bloqueadas por CORS.
 
-**Limitações reais que preciso deixar claras (não testei ao vivo — sem acesso de rede a esses domínios neste ambiente):**
-- Se o site de destino tiver JS de "frame-busting" (script que detecta estar dentro de um iframe e força a navegação para fora dele), o proxy não neutraliza isso — a página pode "escapar" do iframe.
-- Buscas/filtros que dependem de chamadas JavaScript (fetch/XHR) podem falhar se usarem cookies de sessão, CORS restrito, ou captchas anti-bot (comum em portais grandes, especialmente Idealista).
-- Se o site de destino tiver proteção anti-scraping (Cloudflare challenge, rate limiting), o proxy pode ser bloqueado.
-- **Risco de Termos de Uso:** reexibir o site de um terceiro via proxy é diferente de simplesmente linkar para ele. Para Solvia/Hipoges (parceiros formais) provavelmente está alinhado com a colaboração; para Idealista (não é parceiro) recomendo confirmar que isso está OK antes de publicar em produção — portais grandes costumam ter cláusulas explícitas contra isso.
+O que mudei:
+- Reescrevo `href`/`action` de links e formulários no HTML para continuarem passando pelo proxy (navegação sem sair do iframe)
+- Injeto um script que intercepta `fetch()` e `XMLHttpRequest` feitos pela própria página e redireciona para o proxy também (cobre buscas/filtros dinâmicos)
+- Domínio permitido por sufixo (`solvia.es`, `hipoges.com`), cobrindo qualquer subdomínio que eles usem (ex: `api.solvia.es`)
 
-Se algum desses três sites não carregar corretamente dentro do iframe mesmo com o proxy, o link discreto "Abrir en pestaña nueva" no canto superior do painel continua funcionando como alternativa.
+**Limitação honesta — não tenho como testar isso ao vivo neste ambiente (sem acesso de rede a esses domínios).** Essa é a melhor tentativa de engenharia razoável, não uma garantia. Não cobre: WebSockets, Service Workers, ou navegação feita via `window.location` diretamente por JS (sem passar por fetch/XHR/link). Se algo específico continuar quebrado depois do deploy, preciso de prints do erro exato pra continuar ajustando — não dá pra prever todos os casos sem ver o site rodando de verdade.
 
-## Logo
-Fundo real do `esta.png` é preto (não branco) — reprocessado corretamente removendo pixels próximos do preto, confirmado visualmente antes de aplicar.
-
-## H1 da hero
-Uma linha, maiúsculo, com `font-size` em `vw` (não em px fixo) para nunca quebrar linha em nenhuma largura de tela — calculado matematicamente para caber, mas não visualizado ao vivo (sem ferramenta de screenshot neste ambiente).
+## Idealista — fora do proxy, por decisão consciente
+A tela de "Verificación del dispositivo" em loop infinito é proteção anti-bot ativa (tipo Cloudflare/CAPTCHA) — sistema de segurança real deles, não um bloqueio simples de cabeçalho. Não tentei contornar isso. Idealista usa o card "Abrir en pestaña nueva".
 
 ## O que ainda não testei
-- Sem capacidade de screenshot/browser neste ambiente. Validei com `npm run build` (sem erros de TypeScript) e `node --check api/proxy.js` (sintaxe ok). Recomendo testar visualmente no celular de verdade após o deploy, e abrir as 3 páginas de produto para confirmar se o proxy realmente carrega Solvia/Hipoges/Idealista.
+Sem capacidade de screenshot/browser neste ambiente. Validei com `npm run build` (sem erros de TypeScript) e `node --check api/proxy.js` (sintaxe ok).
 
 ## Deploy
 ```
 npm install
 npm run build
 ```
-O `api/proxy.js` é detectado automaticamente pelo Vercel como Serverless Function.

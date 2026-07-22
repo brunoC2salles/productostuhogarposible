@@ -297,6 +297,54 @@ button {
   background: #FAFAFA;
 }
 
+/* External site panel (Idealista - fora do proxy, anti-bot ativo) */
+.thp-external-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FAFAFA;
+  padding: 24px;
+}
+
+.thp-external-card {
+  max-width: 480px;
+  text-align: center;
+  background: #FFFFFF;
+  border: 1px solid var(--thp-border);
+  border-radius: 16px;
+  padding: 48px 40px;
+}
+
+.thp-external-eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--thp-blue);
+  margin-bottom: 12px;
+}
+
+.thp-external-card h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+
+.thp-external-card p {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--thp-text-muted);
+  margin: 0 0 28px;
+}
+
+.thp-external-cta {
+  padding: 14px 32px;
+  font-size: 15px;
+}
+
 /* Disclaimer */
 .thp-disclaimer {
   flex-shrink: 0;
