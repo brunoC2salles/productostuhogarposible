@@ -84,3 +84,10 @@ Com o header de diagnóstico, veio a prova definitiva: o corpo da resposta 404 e
 Padrão identificado: caminhos com 1 segmento (`/api/proxy-hipoges/es`) funcionavam; caminhos com múltiplos níveis (`/api/proxy-hipoges/api/security/csrf-token`) não. A rota dinâmica por nome de arquivo entre colchetes (`api/proxy-hipoges/[...path].js`) não estava sendo confiável para múltiplos segmentos aninhados neste tipo de projeto (Vite/zero-config, não Next.js).
 
 **Correção:** troquei para arquivos de função simples (`api/proxy-solvia.js`, `api/proxy-hipoges.js`, sem colchetes) + `rewrites` explícitos no `vercel.json`, que é o mecanismo de roteamento mais robusto e documentado do Vercel para este tipo de captura de caminho. Do lado do navegador nada muda (a URL continua parecendo um caminho normal, não query string) — o rewrite acontece só no servidor.
+
+## Update 5 — causa raiz das chamadas de API/busca que travavam
+Achado com evidência direta de Network: a chamada `obtenerDisponibilidadAsesor` (POST) ia pro nosso domínio SEM o prefixo do proxy, caindo no fallback SPA (405 Method Not Allowed, porque `index.html` só aceita GET).
+
+Motivo: apps Angular comumente montam URLs de API usando `location.origin` em tempo de execução. Como a página roda dentro do nosso domínio (é assim que o proxy funciona), `location.origin` retornava nosso domínio, não o do parceiro — e como a URL resultante já vinha absoluta, nosso interceptador de fetch/XHR não reconhecia que era destinada ao site real.
+
+Corrigido: qualquer chamada que caia no nosso domínio fora do prefixo do proxy agora é tratada como se fosse para o site real. Isso deve destravar tanto a listagem de imóveis (imagens) quanto a busca.
